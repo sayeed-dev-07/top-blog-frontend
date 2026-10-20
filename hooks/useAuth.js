@@ -32,7 +32,7 @@ export function useLogin() {
         onSuccess: (data) => {
             localStorage.setItem("token", data.token);
             queryClient.invalidateQueries();
-            router.push("/");
+            router.push("/posts");
         },
     });
 }
