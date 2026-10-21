@@ -7,7 +7,7 @@ import React, { useRef } from 'react';
 import Loading from './Loading';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { usePathname } from 'next/navigation';
+
 import { LogOut } from 'lucide-react';
 
 const Navbar = () => {
@@ -15,7 +15,7 @@ const Navbar = () => {
     const logout = useLogout();
     const navRef = useRef(null);
     const borderRef = useRef(null);
-    const pathname = usePathname();
+
 
     useGSAP(() => {
         gsap.fromTo(
@@ -32,18 +32,17 @@ const Navbar = () => {
 
     }, { scope: navRef, dependencies: [isLoading] });
 
-    const isAuthRoute = pathname === '/login' || pathname === '/register';
 
-    // if (isAuthRoute) return null;
+    
 
     return (
-        <nav ref={navRef} className="relative w-full px-3 sm:px-6 py-6 md:py-8">
+        <nav ref={navRef} className="relative  w-full  py-6 md:py-8">
             <div
                 ref={borderRef}
                 className="absolute bottom-0 left-0 w-full h-[1px] bg-black scale-x-0"
             />
 
-            <div className="flex items-center justify-between">
+            <div className="flex max-w-5xl px-3 sm:px-6 mx-auto items-center justify-between">
                 <div className="flex items-center gap-6">
                     <Link
                         href="/"
