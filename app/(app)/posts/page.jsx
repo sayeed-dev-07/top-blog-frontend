@@ -1,23 +1,18 @@
 'use client'
+import { useLogout } from '@/hooks/useAuth';
 import React from 'react';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
 
-const Page = () => {
-    const { user, isLoading } = useCurrentUser();
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (!user) {
-        return <div>Please log in to view posts.</div>;
-    }
+const Posts = () => {
+    const logout = useLogout();
 
     return (
         <div>
-            from posts {user.username}
+            hello from posts
+
+            <button className='cursor-pointer' onClick={logout}>logout</button>
+
         </div>
     );
 };
 
-export default Page;
+export default Posts;
