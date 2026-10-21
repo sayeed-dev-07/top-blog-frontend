@@ -11,8 +11,7 @@ export function useRedirectIfAuthenticated() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Use replace() instead of push() so they can't click the "Back" button to return to login
-            router.replace('/posts');
+            router.replace('/');
         } else {
             setIsChecking(false);
         }

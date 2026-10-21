@@ -31,8 +31,9 @@ export function useLogin() {
             }),
         onSuccess: (data) => {
             localStorage.setItem("token", data.token);
+            window.dispatchEvent(new Event("auth-change"));
             queryClient.invalidateQueries();
-            router.push("/posts");
+            router.push("/");
         },
     });
 }
@@ -43,7 +44,9 @@ export function useLogout() {
 
     return () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.dispatchEvent(new Event("auth-change"));
         queryClient.clear();
-        router.push("/login");
+        router.push("/");
     };
 }

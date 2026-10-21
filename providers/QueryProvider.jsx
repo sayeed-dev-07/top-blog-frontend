@@ -1,5 +1,6 @@
 "use client";
 
+import Navbar from "@/components/shared/Navbar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 

@@ -9,29 +9,34 @@ export function useCurrentUser() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const syncUser = () => {
+            const token = localStorage.getItem('token');
 
-        if (token) {
+            if (!token) {
+                localStorage.removeItem('user');
+                setUser(null);
+                setIsLoading(false);
+                return;
+            }
+
             try {
                 const decodedPayload = jwtDecode(token);
-                setUser(decodedPayload);
-
-                // Automatically set the decoded data in localStorage.user
                 localStorage.setItem('user', JSON.stringify(decodedPayload));
+                setUser(decodedPayload);
             } catch (error) {
-                console.error("Invalid token provided", error);
-                // Clean up invalid data
+                console.error('Invalid token provided', error);
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 setUser(null);
             }
-        } else {
-            // Clean up if no token exists
-            localStorage.removeItem('user');
-            setUser(null);
-        }
 
-        setIsLoading(false);
+            setIsLoading(false);
+        };
+
+        syncUser();
+        window.addEventListener('auth-change', syncUser);
+
+        return () => window.removeEventListener('auth-change', syncUser);
     }, []);
 
     return { user, isLoading };
