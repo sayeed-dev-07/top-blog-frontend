@@ -4,15 +4,15 @@ import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useLogin } from '@/hooks/useAuth';
 import { AlertCircle, Circle, Eye, EyeOff } from 'lucide-react';
-import { useRedirectIfAuthenticated } from '@/hooks/useAuthRedirect';
+
 import gsap from 'gsap';
 
 const LoginForm = () => {
-    const isChecking = useRedirectIfAuthenticated();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    
+
     // 1. Destructure 'reset'
     const { mutate, isError, isPending, error, reset } = useLogin();
 
@@ -51,7 +51,7 @@ const LoginForm = () => {
 
     const displayError = isError ? error?.message : null;
 
-    if (isChecking) return null;
+
 
     return (
         <div className="w-full max-w-2xl mx-auto md:my-24 min-h-[100dvh] md:min-h-0 bg-white flex flex-col justify-center">
@@ -102,8 +102,8 @@ const LoginForm = () => {
                                     placeholder="Enter username"
                                     autoComplete="off"
                                 />
-                                <div 
-                                    ref={usernameBorderRef} 
+                                <div
+                                    ref={usernameBorderRef}
                                     className="absolute bottom-0 left-0 w-full h-[2px] bg-black scale-x-0 origin-left pointer-events-none"
                                 />
                             </div>
@@ -137,8 +137,8 @@ const LoginForm = () => {
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
-                                <div 
-                                    ref={passwordBorderRef} 
+                                <div
+                                    ref={passwordBorderRef}
                                     className="absolute bottom-0 left-0 w-full h-[2px] bg-black scale-x-0 origin-left pointer-events-none"
                                 />
                             </div>
@@ -155,8 +155,8 @@ const LoginForm = () => {
 
                     <div className="mt-8 pt-6 border-t border-black flex justify-between items-center">
                         <span className="text-sm text-gray-500">Don&apos;t have an account?</span>
-                        <Link 
-                            href="/register" 
+                        <Link
+                            href="/register"
                             className="text-sm font-bold cursor-pointer hover:text-red-600 transition-colors"
                         >
                             Register Here →

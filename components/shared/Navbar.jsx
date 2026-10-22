@@ -7,14 +7,15 @@ import React, { useRef } from 'react';
 import Loading from './Loading';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-
 import { LogOut } from 'lucide-react';
+import { useIsAdmin } from '@/hooks/useAdmin';
 
 const Navbar = () => {
     const { user, isLoading } = useCurrentUser();
     const logout = useLogout();
     const navRef = useRef(null);
     const borderRef = useRef(null);
+    const { isAdmin } = useIsAdmin()
 
 
     useGSAP(() => {
@@ -33,7 +34,7 @@ const Navbar = () => {
     }, { scope: navRef, dependencies: [isLoading] });
 
 
-    
+
 
     return (
         <nav ref={navRef} className="relative  w-full  py-6 md:py-8">
@@ -63,11 +64,15 @@ const Navbar = () => {
                     {!isLoading && (
 
                         <div className="nav-item flex items-center gap-8">
+
+                            {user?.admin ? <Link className='font-semibold capitalize underline' href={'/admin'}>admin</Link> : ''}
+
                             <div className="hidden md:flex items-center gap-2">
                                 <div className="w-1 h-1 bg-red-600 rounded-full" />
                                 <span className="text-sm font-medium  uppercase ">
                                     {user ? user.username : 'guest'}
                                 </span>
+
                             </div>
                             {
                                 user ? <button
