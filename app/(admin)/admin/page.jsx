@@ -64,7 +64,6 @@ const AdminDashboard = () => {
             },
             {
                 onSuccess: () => {
-                    // Clear the form after successful submission
                     setTitle('');
                     setContent('');
                     setImgLink('');

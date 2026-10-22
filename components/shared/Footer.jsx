@@ -34,30 +34,30 @@ const Footer = () => {
     ];
 
     return (
-        <footer ref={footerRef} className="w-full border-t flex justify-center items-center border-black bg-[#fafafa] mt-auto">
-            <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-12 md:py-16">
+        <footer ref={footerRef} className="w-full border-t-2 border-dashed border-[#9b8e84]/60 bg-[#fffaf0] mt-auto">
+            <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
 
-                <div className="flex flex-col md:flex-row justify-between gap-12 border-b border-black pb-12">
+                <div className="flex flex-col md:flex-row justify-between gap-12 border-b-2 border-dashed border-[#9b8e84]/40 pb-12">
 
                     {/* Brand Section */}
                     <div className="flex flex-col gap-4 max-w-sm">
                         <div className="flex items-center gap-3">
-                            <div className="w-4 h-4 bg-red-600 rounded-full shrink-0" />
-                            <span className="font-sans text-2xl font-bold text-black">
+                            <span aria-hidden="true" className="text-2xl text-rose-500 -rotate-12">✿</span>
+                            <span className="font-title text-2xl font-semibold text-[#29221f]">
                                 Sayeed Shorif
                             </span>
                         </div>
-                        <p className="text-xs text-gray-500 uppercase tracking-[0.2em] leading-relaxed font-bold">
+                        <p className="inline-flex items-center self-start rounded-full border-2 border-[#29221f] bg-[#ffe5d5] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#29221f] shadow-[2px_2px_0_#29221f] -rotate-1">
                             Digital Archive • デジタルアーカイブ
                         </p>
-                        <p className="text-sm text-gray-600 mt-2">
+                        <p className="text-sm text-[#514943] mt-2 font-medium leading-relaxed">
                             A collection of observations, thoughts, and minimalist web development.
                         </p>
                     </div>
 
                     {/* Links Section */}
-                    <div className="flex  flex-col gap-4 min-w-[200px]">
-                        <span className="text-[14px] text-gray-400 uppercase  mb-2">
+                    <div className="flex flex-col gap-4 min-w-[200px]">
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#9b8e84] mb-2">
                             Navigation
                         </span>
                         <ul className="flex flex-col gap-3">
@@ -68,9 +68,11 @@ const Footer = () => {
                                         target={link.name === 'Archive' ? '_self' : '_blank'}
                                         onMouseEnter={handleLinkEnter}
                                         onMouseLeave={handleLinkLeave}
-                                        className="group inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-black hover:text-red-600 transition-colors"
+                                        className="group inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-[#29221f] hover:text-rose-600 transition-colors"
                                     >
-                                        <span className="link-dot w-1.5 h-1.5 bg-red-600 rounded-full opacity-0 scale-0 origin-center" />
+                                        <span className="link-dot flex items-center justify-center opacity-0 scale-0 origin-center text-rose-500">
+                                            ♡
+                                        </span>
                                         <span className="link-text origin-left">
                                             {link.name}
                                         </span>
@@ -82,12 +84,12 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 text-[11px] text-[#62564e] font-bold tracking-widest uppercase">
                     <p>© {new Date().getFullYear()} Sayeed Shorif. All rights reserved.</p>
 
                     <div className="flex items-center gap-4">
                         <span>Built with Next.js</span>
-                        <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                        <span aria-hidden="true" className="text-rose-400">✳</span>
                         <span>GSAP</span>
                     </div>
                 </div>

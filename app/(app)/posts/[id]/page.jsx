@@ -15,6 +15,7 @@ if (typeof window !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 }
 
+// --- PRESERVED: Your highlight data and parser logic ---
 const diaryAccents = [
     {
         color: '#dc2626',
@@ -56,7 +57,7 @@ const renderDiaryText = (text) => {
             const accent = diaryAccents[Math.floor(currentWordIndex / 13) % diaryAccents.length];
             return (
                 <span key={index} className="highlight-wrapper relative inline-block mx-[0.08em] px-[0.04em]">
-                    <span className="relative z-10 font-bold">{part}</span>
+                    <span className="relative z-10 font-bold text-[#29221f]">{part}</span>
                     <svg
                         aria-hidden="true"
                         className="absolute left-[-8%] top-[-8%] w-[116%] h-[116%] overflow-visible pointer-events-none z-0"
@@ -92,6 +93,7 @@ const renderDiaryText = (text) => {
         return part;
     });
 };
+// --------------------------------------------------------
 
 const PostDetailPage = () => {
     const params = useParams();
@@ -120,7 +122,7 @@ const PostDetailPage = () => {
                     }
                 );
 
-
+                // 2. Sticker animation
                 gsap.utils.toArray('.scroll-sticker').forEach((sticker) => {
                     gsap.fromTo(
                         sticker,
@@ -133,36 +135,31 @@ const PostDetailPage = () => {
                             scrollTrigger: {
                                 trigger: sticker,
                                 start: 'top 85%',
-
                             },
                         }
                     );
                 });
 
-
+                // 3. Highlight Underlines (Preserved)
                 gsap.utils.toArray('.highlight-path').forEach((path) => {
-
                     const length = path.getTotalLength();
-
-
                     gsap.set(path, {
                         strokeDasharray: length,
                         strokeDashoffset: length
                     });
-
-
                     gsap.to(path, {
                         strokeDashoffset: 0,
                         duration: 0.6,
                         ease: 'power2.out',
+                        delay: 0.2,
                         scrollTrigger: {
                             trigger: path.closest('.highlight-wrapper'),
                             start: 'top 85%',
-
                         },
                     });
                 });
 
+                // 4. Highlight Markers (Preserved)
                 gsap.utils.toArray('.highlight-shape').forEach((shape) => {
                     gsap.fromTo(
                         shape,
@@ -170,6 +167,7 @@ const PostDetailPage = () => {
                         {
                             opacity: 0.68,
                             scale: 1,
+                            delay: 0.2,
                             duration: 0.45,
                             ease: 'power2.out',
                             scrollTrigger: {
@@ -198,16 +196,18 @@ const PostDetailPage = () => {
     if (isError || !post) {
         return (
             <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-20">
-                <div className="border border-black bg-[#fafafa] p-8 md:p-12">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-red-600">
-                        A little detour
-                    </span>
+                <div className="rounded-[1.4rem] border-2 border-[#29221f] bg-[#fffaf0] shadow-[4px_5px_0_#29221f] p-8 md:p-12 text-center my-12 relative overflow-hidden">
+                    <span aria-hidden="true" className="absolute -right-4 -bottom-4 text-8xl text-[#ffe5d5] opacity-50 rotate-12">✿</span>
 
-                    <h1 className="font-title text-3xl md:text-4xl text-black mt-4 mb-4">
+                    <p className="inline-block rounded-full border-2 border-[#29221f] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-rose-500 mb-4 shadow-[2px_2px_0_#29221f] -rotate-2">
+                        A little detour
+                    </p>
+
+                    <h1 className="font-title text-3xl md:text-4xl text-[#29221f] mb-4 relative z-10">
                         {isError ? 'We hit a small snag.' : 'This post is missing.'}
                     </h1>
 
-                    <p className="text-base text-gray-800 leading-relaxed mb-8 max-w-lg">
+                    <p className="text-base text-[#62564e] leading-relaxed mb-8 max-w-lg mx-auto relative z-10">
                         {isError
                             ? "Something went wrong while loading this post. Give it another try in a little while."
                             : "Looks like this post isn't here. It may have moved, or the link might not be right."}
@@ -215,7 +215,7 @@ const PostDetailPage = () => {
 
                     <Link
                         href="/"
-                        className="inline-flex items-center gap-3 bg-black text-white px-6 py-4 text-sm font-bold cursor-pointer hover:bg-red-600 transition-colors duration-200"
+                        className="inline-flex items-center gap-2 rounded-full border-2 border-[#29221f] bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#29221f] shadow-[3px_4px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[4px_6px_0_#29221f] transition-all relative z-10"
                     >
                         <span aria-hidden="true">←</span>
                         Back to all posts
@@ -231,33 +231,33 @@ const PostDetailPage = () => {
             className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-16 overflow-visible"
         >
             {/* Navigation */}
-            <nav className="reveal-item flex flex-wrap items-center justify-between gap-4 border-b border-black pb-5 mb-10">
+            <nav className="reveal-item flex flex-wrap items-center justify-between gap-4 border-b-2 border-dashed border-[#9b8e84]/40 pb-6 mb-10">
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 text-sm font-bold text-black cursor-pointer hover:text-red-600 transition-colors"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-[#29221f] cursor-pointer hover:text-rose-600 transition-colors group"
                 >
-                    <span className="text-lg" aria-hidden="true">←</span>
+                    <span className="text-lg transition-transform group-hover:-translate-x-1" aria-hidden="true">←</span>
                     All posts
                 </Link>
 
-                <span className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-gray-700">
-                    <span className="w-2 h-2 rounded-full bg-red-600 shrink-0" />
+                <span className="inline-flex items-center gap-2 rounded-full border-2 border-[#29221f] bg-[#f1fbf7] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#29221f] shadow-[2px_2px_0_#29221f] rotate-1">
+                    <span className="text-teal-600">✳</span>
                     A little space on the internet
                 </span>
             </nav>
 
             {/* Article Header */}
             <header className="reveal-item mb-8 md:mb-12">
-                <p className="text-xs sm:text-sm font-bold text-red-600 mb-5">
+                <p className="text-xs sm:text-sm font-bold text-rose-500 mb-5 tracking-wide">
                     A thought worth sharing
                 </p>
 
-                <h1 className="font-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-black leading-[1.08] tracking-tight mb-7 break-words">
+                <h1 className="font-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-[#29221f] leading-[1.08] tracking-tight mb-7 break-words">
                     {post.title}
                 </h1>
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-gray-700">
-                    <time dateTime={post.createdAt}>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold text-[#62564e]">
+                    <time dateTime={post.createdAt} className="bg-white/50 px-2 py-1 rounded-md">
                         {new Date(post.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
@@ -265,23 +265,35 @@ const PostDetailPage = () => {
                         })}
                     </time>
 
-                    <span className="w-1 h-1 bg-black rounded-full" />
+                    <span aria-hidden="true" className="text-rose-400">♡</span>
 
                     <span>From my notebook</span>
                 </div>
             </header>
 
-            {/* Cover Image */}
+            {/* Cover Image (Scrapbook style wrapper) */}
             {post.imgLink && (
-                <div className="reveal-item relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[620px] border border-black mb-10 md:mb-14 overflow-hidden bg-[#f2f2f2]">
-                    <Image
-                        src={post.imgLink}
-                        alt={post.title}
-                        fill
-                        priority
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 976px"
-                        className="object-cover"
-                    />
+                <div className="reveal-item relative w-full max-w-4xl mx-auto mb-12 md:mb-16">
+                    <span aria-hidden="true" className="absolute -top-3 left-[14%] z-20 h-8 w-24 rotate-[-7deg] border-x border-white/40 bg-[#f2d89b]/85 shadow-sm" />
+                    <span aria-hidden="true" className="absolute -top-3 right-[14%] z-20 h-8 w-24 rotate-[6deg] border-x border-white/40 bg-[#7c3aed]/90 shadow-sm" />
+
+                    <div className="rounded-[1.8rem] border border-[#e4d1bd] bg-[#fffaf0] p-2.5 sm:p-3 ">
+                        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] max-h-[620px] overflow-hidden rounded-[1.25rem] border border-[#eadbca] bg-[#f3e9df]">
+                            <Image
+                                src={post.imgLink}
+                                alt={post.title}
+                                fill
+                                priority
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 976px"
+                                className="object-cover"
+                            />
+                            <span aria-hidden="true" className="pointer-events-none absolute inset-3 rounded-[0.9rem] border border-white/60" />
+                        </div>
+                        <div className="flex items-center justify-between gap-3 px-2 pt-3 sm:px-3 sm:pt-4">
+                            <span className=" text-sm italic text-[#1d1b19] sm:text-base"><span className='text-[crimson] mt-1.5'>♡</span> a little moment, saved here</span>
+                            <span aria-hidden="true" className="text-xl text-rose-400">✿</span>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -289,54 +301,56 @@ const PostDetailPage = () => {
             <div className="relative w-full max-w-3xl mx-auto">
 
                 {/* Left Floating Image (Slightly higher) */}
-                <div className="scroll-sticker hidden lg:block absolute -left-32 xl:-left-48 top-80 w-28 h-28 opacity-0 pointer-events-none select-none z-[-1]">
+                <div className="scroll-sticker hidden lg:block absolute -left-32 xl:-left-48 top-80 w-28 h-28 rounded-2xl  opacity-0 pointer-events-none select-none z-[-1] rotate-3">
+
                     <Image
                         src="/img1.png"
                         alt="Decorative element"
                         fill
-                        className="object-contain drop-shadow-sm"
+                        className="object-contain drop-shadow-sm p-2 rotate-6"
                     />
                 </div>
 
                 {/* Right Floating Image (Slightly lower) */}
-                <div className="scroll-sticker hidden lg:block absolute -right-32 xl:-right-48 top-190 w-32 h-32 opacity-0 pointer-events-none select-none z-[-1]">
+                <div className="scroll-sticker hidden lg:block absolute -right-32 xl:-right-48 top-196 w-32 h-32  opacity-0 pointer-events-none select-none z-[-1] -rotate-3">
+
                     <Image
                         src="/img2.png"
                         alt="Decorative element"
                         fill
-                        className="object-contain drop-shadow-sm"
+                        className="object-contain drop-shadow-sm p-2 -rotate-6"
                     />
                 </div>
 
                 {/* Text Content */}
                 <div className="reveal-item">
-                    <div className="border-l-2 border-red-600 pl-5 sm:pl-7 mb-10">
-                        <p className="text-base sm:text-lg text-gray-800 leading-relaxed">
+                    <div className="border-l-4 border-rose-300 rounded-l-sm pl-5 sm:pl-7 mb-10 bg-gradient-to-r from-rose-50/50 to-transparent py-2">
+                        <p className="text-base sm:text-lg text-[#62564e] font-medium leading-relaxed">
                             A few thoughts, a few things I&apos;ve learned, and a moment to
                             slow down and put them into words.
                         </p>
                     </div>
 
-                    <div className="text-[17px] md:text-lg text-gray-900 leading-[1.95] whitespace-pre-line break-words">
-                        {/* Decorate selected words with animated SVG marker strokes. */}
+                    <div className="text-[17px] md:text-lg text-[#514943] leading-[1.95] whitespace-pre-line break-words">
+                        {/* We use our custom parser here to inject the underlines */}
                         {renderDiaryText(post.content)}
                     </div>
                 </div>
             </div>
 
             {/* Article Footer */}
-            <footer className="reveal-item mt-16 md:mt-24 border-t border-black pt-8 md:pt-10">
+            <footer className="reveal-item mt-16 md:mt-24 border-t-2 border-dashed border-[#9b8e84]/60 pt-10">
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8">
                     <div className="max-w-md">
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-red-600 mb-3">
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-rose-500 mb-3">
                             That&apos;s all for now
                         </p>
 
-                        <h2 className="font-title text-2xl md:text-3xl text-black leading-tight mb-3">
+                        <h2 className="font-title text-2xl md:text-3xl text-[#29221f] leading-tight mb-3">
                             Thanks for reading.
                         </h2>
 
-                        <p className="text-sm md:text-base text-gray-800 leading-relaxed">
+                        <p className="text-sm md:text-base text-[#62564e] font-medium leading-relaxed">
                             Hope you found something here worth thinking about. There&apos;s
                             always another story around the corner.
                         </p>
@@ -344,17 +358,15 @@ const PostDetailPage = () => {
 
                     <Link
                         href="/"
-                        className="inline-flex items-center justify-center gap-3 bg-black text-white px-6 py-4 text-sm font-bold cursor-pointer hover:bg-red-600 transition-colors duration-200 shrink-0"
+                        className="inline-flex items-center justify-center gap-3 rounded-full border-2 border-[#29221f] bg-white px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-[#29221f] shadow-[3px_4px_0_#29221f]  hover:shadow-[3px_4px_0_#fefefe] hover:bg-black hover:text-white transition-all shrink-0"
                     >
                         Read another post
-                        <span aria-hidden="true">→</span>
+                        <span aria-hidden="true" className="text-lg leading-none group-hover:translate-x-1 transition-transform">→</span>
                     </Link>
                 </div>
 
-                <div className="mt-12 flex items-center justify-center gap-4">
-                    <div className="w-10 h-px bg-black" />
-                    <div className="w-3 h-3 border border-red-600 rotate-45" />
-                    <div className="w-10 h-px bg-black" />
+                <div className="mt-12 flex flex-col items-center justify-center text-center">
+                    <span aria-hidden="true" className="text-2xl text-rose-400 mb-3 rotate-6">〰️</span>
                 </div>
             </footer>
         </article>
