@@ -60,7 +60,7 @@ const HomePage = () => {
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-10">
           <h1 className="relative font-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-[#29221f] leading-[1.08] tracking-tight max-w-3xl">
-            Thoughts, things I&apos;m learning, and a bit of code.
+            Thoughts, things I&apos;m thinking, and wondering.
             {/* Decorative Sparkle */}
             <span aria-hidden="true" className="absolute -top-6 -right-8 text-4xl text-[#d8eee3] drop-shadow-sm rotate-12">
               ✳

@@ -219,7 +219,7 @@ const AdminDashboard = () => {
                             <button
                                 type="submit"
                                 disabled={isCreating}
-                                className="mt-2 w-full flex items-center justify-center gap-3 rounded-xl border-2 border-[#29221f] bg-[#29221f] text-white px-6 py-4 text-xs font-bold uppercase tracking-widest shadow-[3px_4px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[4px_6px_0_#29221f] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="mt-2 w-full flex items-center justify-center gap-3 rounded-xl border-2 border-[#29221f] bg-[#29221f] text-white px-6 py-4 text-xs font-bold uppercase cursor-pointer tracking-widest shadow-[3px_4px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[4px_6px_0_#29221f] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 {isCreating ? <Circle className="w-4 h-4 animate-spin" /> : 'Publish thought'}
                             </button>
@@ -286,96 +286,96 @@ const AdminDashboard = () => {
                                         </div>
                                     )}
                                     <article
-                                    className="reveal-item flex flex-col sm:flex-row bg-[#fdfcfb] rounded-[1.4rem] border-2 border-[#29221f] shadow-[4px_5px_0_#29221f] overflow-hidden"
-                                >
-                                    {/* Thumbnail */}
-                                    <div className="relative w-full sm:w-48 h-48 sm:h-auto border-b-2 sm:border-b-0 sm:border-r-2 border-[#29221f] bg-[#f3e9df] shrink-0 overflow-hidden">
-                                        {post.imgLink ? (
-                                            <Image
-                                                src={post.imgLink}
-                                                alt={post.title}
-                                                fill
-                                                sizes="(max-width: 640px) 100vw, 192px"
-                                                className="object-cover"
-                                            />
-                                        ) : (
-                                            <div className="w-full h-full min-h-[12rem] flex flex-col items-center justify-center gap-1 text-[#62564e]">
-                                                <span aria-hidden="true" className="font-title text-4xl">✿</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Content and Actions */}
-                                    <div className="p-5 md:p-7 flex flex-col flex-1 min-w-0 gap-5">
-                                        <div>
-                                            <div className="flex items-center justify-between gap-3 mb-4">
-                                                <span className="text-xs font-bold uppercase tracking-widest text-[#9b8e84]">
-                                                    ID #{post.id}
-                                                </span>
-
-                                                <span
-                                                    className={`inline-flex items-center gap-2 rounded-full border-2 border-[#29221f] px-3 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_#29221f] ${post.published
-                                                        ? 'bg-[#d8f3e8] text-[#29221f]'
-                                                        : 'bg-[#ffe5d5] text-[#29221f]'
-                                                        }`}
-                                                >
-                                                    <span
-                                                        className={`w-2 h-2 rounded-full ${post.published ? 'bg-teal-500' : 'bg-rose-500'
-                                                            }`}
-                                                    />
-                                                    {post.published ? 'Published' : 'Draft'}
-                                                </span>
-                                            </div>
-
-                                            <h3 className="font-title text-xl md:text-2xl font-semibold text-[#29221f] leading-snug mb-3">
-                                                {post.title}
-                                            </h3>
-
-                                            <p className="text-sm text-[#62564e] font-medium leading-relaxed line-clamp-2">
-                                                {post.content}
-                                            </p>
-                                        </div>
-
-                                        {/* Actions */}
-                                        <div className="mt-auto pt-5 border-t-2 border-dashed border-[#9b8e84]/40 flex flex-wrap items-center gap-3">
-                                            <Link
-                                                href={`/posts/${post.id}`}
-                                                className="inline-flex items-center justify-center rounded-xl border-2 border-[#29221f] bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#29221f] shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all"
-                                            >
-                                                View
-                                                <span aria-hidden="true" className="ml-2 text-sm leading-none">↗</span>
-                                            </Link>
-
-                                            {post.published ? (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => unpublishPost(post.id)}
-                                                    disabled={isListActionPending}
-                                                    className="inline-flex items-center justify-center rounded-xl border-2 border-[#29221f] bg-[#ffe5d5] px-4 py-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer text-[#29221f] shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all disabled:opacity-50"
-                                                >
-                                                    {isUnpublishing && unpublishingPostId === post.id ? 'Unpublishing' : 'Unpublish'}
-                                                </button>
+                                        className="reveal-item flex flex-col sm:flex-row bg-[#fdfcfb] rounded-[1.4rem] border-2 border-[#29221f] shadow-[4px_5px_0_#29221f] overflow-hidden"
+                                    >
+                                        {/* Thumbnail */}
+                                        <div className="relative w-full sm:w-48 h-48 sm:h-auto border-b-2 sm:border-b-0 sm:border-r-2 border-[#29221f] bg-[#f3e9df] shrink-0 overflow-hidden">
+                                            {post.imgLink ? (
+                                                <Image
+                                                    src={post.imgLink}
+                                                    alt={post.title}
+                                                    fill
+                                                    sizes="(max-width: 640px) 100vw, 192px"
+                                                    className="object-cover"
+                                                />
                                             ) : (
+                                                <div className="w-full h-full min-h-[12rem] flex flex-col items-center justify-center gap-1 text-[#62564e]">
+                                                    <span aria-hidden="true" className="font-title text-4xl">✿</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Content and Actions */}
+                                        <div className="p-5 md:p-7 flex flex-col flex-1 min-w-0 gap-5">
+                                            <div>
+                                                <div className="flex items-center justify-between gap-3 mb-4">
+                                                    <span className="text-xs font-bold uppercase tracking-widest text-[#9b8e84]">
+                                                        ID #{post.id}
+                                                    </span>
+
+                                                    <span
+                                                        className={`inline-flex items-center gap-2 rounded-full border-2 border-[#29221f] px-3 py-1 text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0_#29221f] ${post.published
+                                                            ? 'bg-[#d8f3e8] text-[#29221f]'
+                                                            : 'bg-[#ffe5d5] text-[#29221f]'
+                                                            }`}
+                                                    >
+                                                        <span
+                                                            className={`w-2 h-2 rounded-full ${post.published ? 'bg-teal-500' : 'bg-rose-500'
+                                                                }`}
+                                                        />
+                                                        {post.published ? 'Published' : 'Draft'}
+                                                    </span>
+                                                </div>
+
+                                                <h3 className="font-title text-xl md:text-2xl font-semibold text-[#29221f] leading-snug mb-3">
+                                                    {post.title}
+                                                </h3>
+
+                                                <p className="text-sm text-[#62564e] font-medium leading-relaxed line-clamp-2">
+                                                    {post.content}
+                                                </p>
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="mt-auto pt-5 border-t-2 border-dashed border-[#9b8e84]/40 flex flex-wrap items-center gap-3">
+                                                <Link
+                                                    href={`/posts/${post.id}`}
+                                                    className="inline-flex items-center justify-center rounded-xl border-2 border-[#29221f] bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#29221f] shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all"
+                                                >
+                                                    View
+                                                    <span aria-hidden="true" className="ml-2 text-sm leading-none">↗</span>
+                                                </Link>
+
+                                                {post.published ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => unpublishPost(post.id)}
+                                                        disabled={isListActionPending}
+                                                        className="inline-flex items-center justify-center rounded-xl border-2 border-[#29221f] bg-[#ffe5d5] px-4 py-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer text-[#29221f] shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all disabled:opacity-50"
+                                                    >
+                                                        {isUnpublishing && unpublishingPostId === post.id ? 'Unpublishing' : 'Unpublish'}
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => publishPost(post.id)}
+                                                        disabled={isListActionPending}
+                                                        className="inline-flex items-center justify-center cursor-pointer rounded-xl border-2 border-[#29221f] bg-[#d8f3e8] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#29221f]  shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all disabled:opacity-50"
+                                                    >
+                                                        {isPublishing && publishingPostId === post.id ? 'Publishing' : 'Publish'}
+                                                    </button>
+                                                )}
+
                                                 <button
                                                     type="button"
-                                                    onClick={() => publishPost(post.id)}
+                                                    onClick={() => deletePost(post.id)}
                                                     disabled={isListActionPending}
-                                                    className="inline-flex items-center justify-center cursor-pointer rounded-xl border-2 border-[#29221f] bg-[#d8f3e8] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#29221f]  shadow-[2px_2px_0_#29221f] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#29221f] transition-all disabled:opacity-50"
+                                                    className="inline-flex items-center justify-center cursor-pointer rounded-xl border-2 border-rose-500 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-rose-600 shadow-[2px_2px_0_#f43f5e] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#f43f5e] transition-all ml-auto disabled:opacity-50"
                                                 >
-                                                    {isPublishing && publishingPostId === post.id ? 'Publishing' : 'Publish'}
+                                                    {isDeleting && deletingPostId === post.id ? 'Deleting' : 'Delete'}
                                                 </button>
-                                            )}
-
-                                            <button
-                                                type="button"
-                                                onClick={() => deletePost(post.id)}
-                                                disabled={isListActionPending}
-                                                className="inline-flex items-center justify-center cursor-pointer rounded-xl border-2 border-rose-500 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-rose-600 shadow-[2px_2px_0_#f43f5e] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_#f43f5e] transition-all ml-auto disabled:opacity-50"
-                                            >
-                                                {isDeleting && deletingPostId === post.id ? 'Deleting' : 'Delete'}
-                                            </button>
+                                            </div>
                                         </div>
-                                    </div>
                                     </article>
                                 </React.Fragment>
                             ))
