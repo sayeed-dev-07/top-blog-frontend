@@ -1,5 +1,5 @@
 
-import { createPost, getAllPosts, getPostById, removePost, updatePost } from "@/lib/postAPI";
+import { createPost, getAllPosts, getPostById, publishPost, removePost, unpublishPost, updatePost } from "@/lib/postAPI";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function usePosts() {
@@ -57,6 +57,28 @@ export function useDeletePost() {
         onSuccess: (_, deletedPostId) => {
             queryClient.removeQueries({ queryKey: ["posts", deletedPostId] });
 
+            queryClient.invalidateQueries({ queryKey: ["posts"] });
+        },
+    });
+}
+
+export function usePublishPost() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (postId) => publishPost(postId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["posts"] });
+        },
+    });
+}
+
+export function useUnpublishPost() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (postId) => unpublishPost(postId),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"] });
         },
     });

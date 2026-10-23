@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePosts } from '@/hooks/usePost';
@@ -8,16 +8,20 @@ import Loading from '@/components/shared/Loading';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+
+
 const HomePage = () => {
+
+
+
   const { data, isLoading, isError } = usePosts();
 
-  const posts = data?.data?.posts || data?.posts || [];
+  let posts = data?.data?.posts || data?.posts || [];
+  posts = posts.filter(arr => arr.published)
   const containerRef = useRef(null);
 
-  const { contextSafe } = useGSAP(
+  useGSAP(
     () => {
-      // Run the animation as long as it's done loading, 
-      // ensuring error and empty states also get animated smoothly.
       if (!isLoading) {
         gsap.fromTo(
           '.post-card, .reveal-item',
@@ -37,6 +41,7 @@ const HomePage = () => {
       dependencies: [isLoading, isError, posts.length],
     }
   );
+
 
   return (
     <main

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from '@/components/shared/Loading';
@@ -8,7 +8,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { usePosts } from '@/hooks/usePost';
+import { useComments, useCreateComment, useUpdateComment, useDeleteComment } from '@/hooks/useComment';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useParams } from 'next/navigation';
+
+
 
 // Register ScrollTrigger
 if (typeof window !== 'undefined') {
@@ -98,11 +102,63 @@ const renderDiaryText = (text) => {
 const PostDetailPage = () => {
     const params = useParams();
     const postId = parseInt(params.id, 10);
+    
 
     const { data, isLoading, isError } = usePosts();
+    const { data: commentsData, isLoading: isCommentsLoading, isError: isCommentsError } = useComments(postId);
+    const { user, isLoading: isUserLoading } = useCurrentUser();
+    const isAdmin = user?.admin === true;
+    const { mutate: createComment, isPending: isCreatingComment, error: createCommentError } = useCreateComment();
+    const { mutate: updateComment, isPending: isUpdatingComment, variables: updatingVariables, error: updateCommentError } = useUpdateComment();
+    const { mutate: deleteComment, isPending: isDeletingComment, variables: deletingVariables, error: deleteCommentError } = useDeleteComment();
+    const [newComment, setNewComment] = useState('');
+    const [editingCommentId, setEditingCommentId] = useState(null);
+    const [editingContent, setEditingContent] = useState('');
 
     const posts = data?.data?.posts || data?.posts || [];
     const post = posts.find((p) => p.id === postId);
+    const comments = commentsData?.data?.comments || commentsData?.comments || commentsData?.data || commentsData;
+    const commentList = Array.isArray(comments) ? comments : [];
+    const currentUserId = user?.id;
+
+    const getCommentAuthorId = (comment) => {
+        const author = comment.author ?? comment.user;
+        return comment.authorId ?? comment.userId ??
+            (typeof author === 'object' && author !== null
+                ? author.id ?? author._id ?? author.userId
+                : author);
+    };
+
+    const canManageComment = (comment) => {
+        const authorId = getCommentAuthorId(comment);
+        return isAdmin || (
+            currentUserId != null && authorId != null &&
+            String(currentUserId) === String(authorId)
+        );
+    };
+
+    const handleCreateComment = (event) => {
+        event.preventDefault();
+        const content = newComment.trim();
+        if (!content) return;
+
+        createComment({ postId, content, username: user?.username }, {
+            onSuccess: () => setNewComment(''),
+        });
+    };
+
+    const handleUpdateComment = (event, commentId) => {
+        event.preventDefault();
+        const content = editingContent.trim();
+        if (!content) return;
+
+        updateComment({ postId, commentId, content }, {
+            onSuccess: () => {
+                setEditingCommentId(null);
+                setEditingContent('');
+            },
+        });
+    };
 
     const containerRef = useRef(null);
 
@@ -337,6 +393,137 @@ const PostDetailPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Comments */}
+            <section className="reveal-item mt-16 md:mt-20 max-w-3xl mx-auto border-t border-[#e7ddd2] pt-8" aria-labelledby="comments-heading">
+                <div className="mb-7">
+                    <h2 id="comments-heading" className="text-xl font-semibold text-[#29221f]">
+                        Comments <span className="text-sm font-medium text-[#9b8e84]">({commentList.length})</span>
+                    </h2>
+                </div>
+
+                {isCommentsError && (
+                    <p role="alert" className="mb-5 rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+                        Comments could not be loaded. Please refresh and try again.
+                    </p>
+                )}
+
+                {isCommentsLoading ? (
+                    <p className="mb-6 text-sm text-[#62564e]">Loading comments…</p>
+                ) : commentList.length === 0 ? (
+                    <p className="mb-6 text-sm text-[#62564e]">
+                        No comments yet. Be the first to share a thought.
+                    </p>
+                ) : (
+                    <div className="mb-8 flex flex-col gap-4">
+                        {commentList.map((comment, index) => {
+                            const commentId = comment.id ?? comment._id;
+                            const author = comment.author ?? comment.user;
+                            const commentAuthorId = getCommentAuthorId(comment);
+                            const isOwnComment = currentUserId != null && commentAuthorId != null &&
+                                String(currentUserId) === String(commentAuthorId);
+                            const authorName = typeof author === 'object' && author !== null
+                                ? author.username ?? author.name
+                                : author;
+
+                            const isEditing = editingCommentId === commentId;
+                            const canManage = canManageComment(comment);
+
+                            return (
+                                <article key={commentId ?? index} className="rounded-xl border border-[#e7ddd2] bg-white p-4">
+                                    <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                                        <div className="text-xl flex font-semibold text-[#29221f] items-center justify-center">
+                                            <Image src={'/profile.png'} alt='pp-img' height={40} width={40} />
+                                            {authorName || comment.username || (isOwnComment ? user?.username : null) || 'Reader'}
+                                        </div>
+                                        {comment.createdAt && (
+                                            <time dateTime={comment.createdAt} className="text-xs text-[#9b8e84]">
+                                                {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                                    year: 'numeric', month: 'long', day: 'numeric',
+                                                })}
+                                            </time>
+                                        )}
+                                    </div>
+
+                                    {isEditing ? (
+                                        <form onSubmit={(event) => handleUpdateComment(event, commentId)} className="flex flex-col gap-3">
+                                            <textarea
+                                                value={editingContent}
+                                                onChange={(event) => setEditingContent(event.target.value)}
+                                                rows={3}
+                                                maxLength={2000}
+                                                required
+                                                aria-label="Edit comment"
+                                                className="w-full rounded-xl border-2 border-[#29221f] bg-white px-4 py-3 text-sm text-[#29221f] focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                            />
+                                            <div className="flex gap-2">
+                                                <button type="submit" disabled={isUpdatingComment || !editingContent.trim()} className="rounded-lg border-2 border-[#29221f] bg-[#d8f3e8] px-4 py-2 text-xs cursor-pointer font-bold uppercase tracking-wide text-[#29221f] disabled:opacity-50">
+                                                    {isUpdatingComment && updatingVariables?.commentId === commentId ? 'Saving…' : 'Save'}
+                                                </button>
+                                                <button type="button" onClick={() => { setEditingCommentId(null); setEditingContent(''); }} className="rounded-lg border-2 border-[#29221f] bg-white px-4 py-2 text-xs font-bold cursor-pointer uppercase tracking-wide text-[#29221f]">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    ) : (
+                                        <p className="whitespace-pre-wrap wrap-break-word text-base leading-relaxed text-[#514943]">{comment.content}</p>
+                                    )}
+
+                                    {canManage && !isEditing && (
+                                        <div className="mt-3 flex gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => { setEditingCommentId(commentId); setEditingContent(comment.content || ''); }}
+                                                className="text-xs cursor-pointer font-medium text-[#62564e] hover:text-teal-700"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => deleteComment({ postId, commentId })}
+                                                disabled={isDeletingComment}
+                                                className="text-xs cursor-pointer font-medium text-rose-600 hover:text-rose-800 disabled:opacity-50"
+                                            >
+                                                {isDeletingComment && deletingVariables?.commentId === commentId ? 'Deleting…' : 'Delete'}
+                                            </button>
+                                        </div>
+                                    )}
+                                </article>
+                            );
+                        })}
+                    </div>
+                )}
+
+                {createCommentError && <p role="alert" className="mb-4 text-sm font-medium text-rose-700">{createCommentError.message || 'Comment could not be added.'}</p>}
+                {updateCommentError && <p role="alert" className="mb-4 text-sm font-medium text-rose-700">{updateCommentError.message || 'Comment could not be updated.'}</p>}
+                {deleteCommentError && <p role="alert" className="mb-4 text-sm font-medium text-rose-700">{deleteCommentError.message || 'Comment could not be deleted.'}</p>}
+
+                {isUserLoading ? null : user ? (
+                    <form onSubmit={handleCreateComment} className="rounded-xl border border-[#e7ddd2] bg-[#fffdf9] p-3">
+                        <textarea
+                            id="new-comment"
+                            value={newComment}
+                            onChange={(event) => setNewComment(event.target.value)}
+                            rows={2}
+                            maxLength={2000}
+                            required
+                            aria-label="Add a comment"
+                            placeholder="Share a thoughtful response…"
+                            className="w-full resize-y border-0 bg-transparent px-2 py-1 text-sm leading-relaxed text-[#29221f] placeholder:text-[#9b8e84] focus:outline-none"
+                        />
+                        <div className="mt-2 flex items-center justify-end gap-3 border-t border-[#eee6de] pt-2">
+                            <span className="text-[11px] text-[#9b8e84]">{newComment.length}/2000</span>
+                            <button type="submit" disabled={isCreatingComment || !newComment.trim()} className="rounded-lg bg-[#29221f] px-3 py-1.5 text-xs cursor-pointer font-semibold text-white hover:bg-teal-800 disabled:opacity-50">
+                                {isCreatingComment ? 'Posting…' : 'Post comment'}
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <p className="text-sm text-[#62564e]">
+                        <Link href="/login" className="font-bold text-rose-600 underline underline-offset-2">Log in</Link> to leave a comment.
+                    </p>
+                )}
+            </section>
 
             {/* Article Footer */}
             <footer className="reveal-item mt-16 md:mt-24 border-t-2 border-dashed border-[#9b8e84]/60 pt-10">
