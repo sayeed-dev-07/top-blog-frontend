@@ -93,7 +93,7 @@ const HomePage = () => {
 
           {!isLoading && !isError && (
             <span className="hidden sm:inline-flex items-center justify-center rounded-full border-2 border-[#29221f] bg-white px-4 py-1.5 text-sm font-bold text-[#29221f] shadow-[2px_2px_0_#29221f]">
-              {posts.length} {posts.length === 1 ? 'entry' : 'entries'}
+              {posts.length} {posts.length === 1 ? 'post' : 'posts'}
             </span>
           )}
         </div>
