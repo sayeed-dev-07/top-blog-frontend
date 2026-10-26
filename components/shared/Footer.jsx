@@ -70,7 +70,7 @@ const Footer = () => {
                                         onMouseLeave={handleLinkLeave}
                                         className="group inline-flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-[#29221f] hover:text-rose-600 transition-colors"
                                     >
-                                        <span className="link-dot flex items-center justify-center opacity-0 scale-0 origin-center text-rose-500">
+                                        <span className="link-dot hidden md:flex items-center justify-center opacity-0 scale-0 origin-center text-rose-500">
                                             ♡
                                         </span>
                                         <span className="link-text origin-left">
